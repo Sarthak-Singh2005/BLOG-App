@@ -1,0 +1,24 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* 🔥 removes scroll */
+  background-color: blueviolet;
+}
+.Login{
+    color: coral;
+    border: 2px solid coral;
+    display: inline-flex;
+}
+.Sign{
+ color: red;
+ border: 2px solid red;
+ display: inline-flex;
+}
+.container {
+color: chartreuse;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
