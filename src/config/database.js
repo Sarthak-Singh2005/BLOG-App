@@ -1,21 +1,41 @@
 const mongoose = require("mongoose");
+const { MongoMemoryServer } = require("mongodb-memory-server");
 
 async function connectToDB() {
   const uri = process.env.MONGO_URL;
 
-  if (!uri) {
-    throw new Error("MONGO_URL is not defined in environment variables");
+  try {
+    // Try MongoDB Atlas first
+    if (uri && uri.includes("mongodb+srv")) {
+      await mongoose.connect(uri, {
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+        bufferCommands: false,
+      });
+
+      console.log("Connected to MongoDB Atlas");
+      return;
+    } else {
+      throw new Error("MONGO_URL is missing or invalid");
+    }
+  } catch (err) {
+    console.log("Atlas connection failed:");
+    console.error(err.message);
+    console.log("Falling back to local MongoDB Memory Server...");
   }
 
+  // Fallback to Mongo Memory Server
   try {
-    await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
-      socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-      bufferCommands: false, // Disable mongoose buffering
-    });
-    console.log("Connected to MongoDB");
+    const mongoServer = await MongoMemoryServer.create();
+    const mongoUri = mongoServer.getUri();
+
+    await mongoose.connect(mongoUri);
+
+    console.log("Connected to local MongoDB Memory Server");
   } catch (err) {
-    console.error("MongoDB connection error:", err);
+    console.error("Failed to connect to local MongoDB:");
+    console.error(err.message);
+
     throw err;
   }
 }
