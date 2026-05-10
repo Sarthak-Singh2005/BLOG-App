@@ -1,9 +1,9 @@
 const express = require("express");
 const cors = require("cors");
+const postRoutes = require("./src/routes/post.routes");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const app = express();
-
 const authRoutes = require("./src/routes/auth.routes");
 const connectToDB = require("./src/config/database"); // 👈 import
 
@@ -22,7 +22,7 @@ connectToDB()
     app.use(cookieParser());
 
     app.use("/api/auth", authRoutes);
-
+    app.use("/api/post", postRoutes);
     app.listen(5000, () => {
       console.log("Server running on port 5000");
     });
