@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,6 +21,7 @@ export default function Register() {
 
       alert(data.message);
       console.log(data);
+      // navigate("/blog");
     } catch (err) {
       console.log(err);
     }
